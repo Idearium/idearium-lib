@@ -22,19 +22,6 @@ test.cb.before((t) => {
 
 });
 
-test('common/config will load the config', (t) => {
-
-    // eslint-disable-next-line global-require
-    const config = require('../common/config');
-
-    t.is(config.get('title'), 'development');
-    t.is(config.get('phone'), 1234);
-
-    config.set('url', 'google.com');
-    t.is(config.get('url'), 'google.com');
-
-});
-
 test.cb.after.always((t) => {
 
     fs.unlink(`${dir}/config.js`, function (err) {
@@ -48,5 +35,18 @@ test.cb.after.always((t) => {
         fs.rmdir(dir, t.end);
 
     });
+
+});
+
+test('common/config will load the config', (t) => {
+
+    // eslint-disable-next-line global-require
+    const config = require('../common/config');
+
+    t.is(config.get('title'), 'development');
+    t.is(config.get('phone'), 1234);
+
+    config.set('url', 'google.com');
+    t.is(config.get('url'), 'google.com');
 
 });

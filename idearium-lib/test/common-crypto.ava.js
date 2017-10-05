@@ -52,6 +52,22 @@ test.cb.before((t) => {
 
 });
 
+test.cb.after.always((t) => {
+
+    fs.unlink(`${dir}/config.js`, function (err) {
+
+        /* eslint-disable padded-blocks */
+        if (err) {
+            return t.end(err);
+        }
+        /* eslint-enable padded-blocks */
+
+        fs.rmdir(dir, t.end);
+
+    });
+
+});
+
 test('common/crypto will decrypt some data', (t) => {
 
     t.is(crypto.decrypt(encryption), data);
@@ -89,21 +105,5 @@ test('common/crypto will generate an iv key pair', (t) => {
     t.deepEqual(Object.keys(crypto.generateIvKey()), ['iv', 'key']);
     t.deepEqual(Object.keys(crypto.generateIvKey()), ['iv', 'key']);
     t.deepEqual(Object.keys(crypto.generateIvKey()), ['iv', 'key']);
-
-});
-
-test.cb.after.always((t) => {
-
-    fs.unlink(`${dir}/config.js`, function (err) {
-
-        /* eslint-disable padded-blocks */
-        if (err) {
-            return t.end(err);
-        }
-        /* eslint-enable padded-blocks */
-
-        fs.rmdir(dir, t.end);
-
-    });
 
 });

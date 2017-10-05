@@ -39,6 +39,7 @@
   },
   "devDependencies": {
     "@idearium/eslint-config": "latest",
+    "ava": "0.22.0",
     "chai": "3.5.0",
     "chai-as-promised": "5.3.0",
     "copy-dir": "0.3.0",

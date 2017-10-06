@@ -44,7 +44,7 @@ test.after.always(() => {
 
 test.cb('common/mq/rpc-server will connect to rabbit mq', (t) => {
 
-    // Catch and proxy any errors to `done`.
+    // Catch and proxy any errors to `t.end`.
     try {
 
         // eslint-disable-next-line global-require
@@ -56,7 +56,6 @@ test.cb('common/mq/rpc-server will connect to rabbit mq', (t) => {
 
         // When the `connect` event is fired, we're done.
         // Only listen once, because `../common/mq/rpc-server` is used in later tests.
-        // It will be cached, and so we don't want to execute this instance of `done` again.
         mqRpcServer.once('connect', function () {
 
             const keys = Object.keys(mqRpcServer.options);
@@ -72,7 +71,7 @@ test.cb('common/mq/rpc-server will connect to rabbit mq', (t) => {
 
         });
 
-        // Listen for errors and send to `done`.
+        // Listen for errors.
         mqRpcServer.once('error', t.end);
 
     } catch (e) {

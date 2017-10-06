@@ -1,3 +1,3 @@
 #!/usr/bin/env sh
 
-DEBUG=lib:logger:*,idearium-lib:common:exception BLUEBIRD_WARNINGS=0 "/app/node_modules/.bin/ava" --timeout=15s ./test/*.ava.js
+DEBUG=lib:logger:*,idearium-lib:common:exception BLUEBIRD_WARNINGS=0 "/app/node_modules/.bin/ava" --timeout=15s --verbose ./test/*.ava.js

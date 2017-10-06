@@ -18,6 +18,8 @@ test.before(() => {
 
     // eslint-disable-next-line no-process-env
     const nodeEnv = process.env.NODE_ENV;
+    const source = path.join(dir, 'data', 'mongo-certs');
+    const dest = path.join(dir, '..', 'mongo-certs', nodeEnv);
 
     return rimraf(configDir)
         .then(() => mkdir(configDir))
@@ -26,14 +28,8 @@ test.before(() => {
             return writeFile(`${configDir}/config.js`, 'module.exports = { "test": "common-mongo-certs" }');
 
         })
-        .then(() => {
-
-            const source = path.join(dir, 'data', 'mongo-certs');
-            const dest = path.join(dir, '..', 'mongo-certs', nodeEnv);
-
-            return copy(source, dest);
-
-        });
+        .then(() => rimraf(dest))
+        .then(() => copy(source, dest));
 
 });
 

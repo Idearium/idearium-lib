@@ -31,6 +31,7 @@ test.before(() => {
 
         })
         // Move the test files into place
+        .then(() => rimraf(dest))
         .then(() => copy(source, dest));
 
 });

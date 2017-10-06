@@ -19,7 +19,8 @@ test.before(() => {
     // eslint-disable-next-line no-process-env
     const nodeEnv = process.env.NODE_ENV;
 
-    return mkdir(configDir)
+    return rimraf(configDir)
+        .then(() => mkdir(configDir))
         .then(() => {
 
             return writeFile(`${configDir}/config.js`, 'module.exports = { "test": "common-mongo-certs" }');

@@ -22,7 +22,8 @@ test.before(() => {
     const source = path.join(dir, 'data', 'mq-certs');
     const dest = path.join(dir, '..', 'mq-certs', nodeEnv);
 
-    return mkdir(configDir)
+    return rimraf(configDir)
+        .then(() => mkdir(configDir))
         .then(() => {
 
             return writeFile(`${configDir}/config.js`, `module.exports = { "mqUrl": "${conf.rabbitUrl}" }`);

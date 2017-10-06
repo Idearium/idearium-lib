@@ -2,41 +2,27 @@
 
 const path = require('path');
 const fs = require('fs');
-const dir = path.resolve(__dirname, '..', 'config');
 
 const { test } = require('ava');
+const { toPromise } = require('../lib/util/to');
 
-test.cb.before((t) => {
+const mkdir = toPromise(fs.mkdir);
+const writeFile = toPromise(fs.writeFile);
+const rimraf = toPromise(require('rimraf'));
 
-    fs.mkdir(dir, function (err) {
+const dir = path.resolve(__dirname);
+const configDir = path.join(dir, '..', 'config');
+const configFile = path.join(configDir, 'config.js');
 
-        /* eslint-disable padded-blocks */
-        if (err) {
-            return t.end(err);
-        }
-        /* eslint-enable padded-blocks */
+test.before(() => {
 
-        fs.writeFile(`${dir}/config.js`, 'module.exports = { "title": "development", "phone": 1234 };', t.end);
-
-    });
-
-});
-
-test.cb.after.always((t) => {
-
-    fs.unlink(`${dir}/config.js`, function (err) {
-
-        /* eslint-disable padded-blocks */
-        if (err) {
-            return t.end(err);
-        }
-        /* eslint-enable padded-blocks */
-
-        fs.rmdir(dir, t.end);
-
-    });
+    return rimraf(configDir)
+        .then(() => mkdir(configDir))
+        .then(() => writeFile(configFile, 'module.exports = { "title": "development", "phone": 1234 };'));
 
 });
+
+test.after.always(() => rimraf(configDir));
 
 test('common/config will load the config', (t) => {
 

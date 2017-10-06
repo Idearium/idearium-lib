@@ -15,7 +15,7 @@ const conf = require('./conf');
 const dir = path.resolve(__dirname);
 const configDir = path.join(dir, '..', 'config');
 
-test.before((t) => {
+test.before(() => {
 
     // eslint-disable-next-line no-process-env
     const nodeEnv = process.env.NODE_ENV;

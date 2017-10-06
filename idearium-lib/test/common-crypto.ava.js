@@ -4,69 +4,44 @@ const fs = require('fs');
 const path = require('path');
 
 const { test } = require('ava');
+const { toPromise } = require('../lib/util/to');
 
-const dir = path.resolve(__dirname, '..', 'config');
+const mkdir = toPromise(fs.mkdir);
+const writeFile = toPromise(fs.writeFile);
+const rimraf = toPromise(require('rimraf'));
+
 const data = 'test';
 const digest = 'Q7DO+ZJl+eNMEOqdNQGSbSezn1fG1nRWHYuiNueoGfs=';
 const encryption = 'xhe0s7KlBwDw7Gi8riPy5A==';
 const userIv = 'Oan9RRdKYuDCyzJI';
 const userSecret = 'rmeJRgNBVizATHzG';
 
-let config;
+const dir = path.resolve(__dirname);
+const configDir = path.join(dir, '..', 'config');
+const configFile = path.join(configDir, 'config.js');
+
 let crypto;
 
-test.cb.before((t) => {
+test.before(() => {
 
-    fs.mkdir(dir, function (err) {
+    return rimraf(configDir)
+        .then(() => mkdir(configDir))
+        .then(() => {
 
-        /* eslint-disable padded-blocks */
-        if (err) {
-            return t.end(err);
-        }
-        /* eslint-enable padded-blocks */
+            return writeFile(configFile, `module.exports = { "userIv": "${userIv}", "userSecret": "${userSecret}" };`);
 
-        fs.writeFile(`${dir}/config.js`, 'module.exports = { "title": "development", "phone": 1234 };', (writeErr) => {
-
-            /* eslint-disable padded-blocks */
-            if (writeErr) {
-                return t.end(writeErr);
-            }
-            /* eslint-enable padded-blocks */
-
-            // Load in the config, and set some values.
-            // eslint-disable-next-line global-require
-            config = require('../common/config');
-
-            config.set('userIv', userIv);
-            config.set('userSecret', userSecret);
+        })
+        .then(() => {
 
             // Now load in the crypto module.
             // eslint-disable-next-line global-require
             crypto = require('../common/crypto');
 
-            t.end();
-
         });
 
-    });
-
 });
 
-test.cb.after.always((t) => {
-
-    fs.unlink(`${dir}/config.js`, function (err) {
-
-        /* eslint-disable padded-blocks */
-        if (err) {
-            return t.end(err);
-        }
-        /* eslint-enable padded-blocks */
-
-        fs.rmdir(dir, t.end);
-
-    });
-
-});
+test.after.always(() => rimraf(configDir));
 
 test('common/crypto will decrypt some data', (t) => {
 

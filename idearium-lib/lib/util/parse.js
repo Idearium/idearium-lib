@@ -62,12 +62,16 @@ const parseCsv = (data, options) => new Promise((resolve, reject) => {
 
     });
 
-    const outputStream = stream.pipe(parse())
+    const parser = parse();
+
+    parser.once('error', reject);
+
+    const outputStream = stream.pipe(parser)
         .pipe(transformStream(transformer));
 
     streamToPromise(outputStream)
-            .then(() => resolve(csv))
-            .catch(reject);
+        .then(() => resolve(csv))
+        .catch(reject);
 
 });
 

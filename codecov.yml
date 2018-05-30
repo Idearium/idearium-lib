@@ -1,0 +1,12 @@
+coverage:
+  notify:
+    slack:
+      default:
+        url: ''
+        threshold: 1%
+        only_pulls: false
+        branches: null
+        flags: null
+        paths: null
+fixes:
+- 'dist/::lib/'

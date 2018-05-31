@@ -6,26 +6,23 @@ describe('config', () => {
 
     let config;
 
-    beforeAll(() => makeConfigs('module.exports = { "title": "development", "phone": 1234 };'));
+    beforeAll(() => makeConfigs('module.exports = { "title": "development", "phone": 1234 };')
+        .then(() => {
 
-    beforeEach(() => {
+            // eslint-disable-next-line global-require, prefer-destructuring
+            config = require('../lib').config;
 
-        // eslint-disable-next-line global-require, prefer-destructuring
-        config = require('../lib').config;
+            return Promise.resolve();
 
-        console.log('WHAT IS CONFIG ANYWAY?', config.getAll());
-
-        return Promise.resolve();
-
-    });
+        }));
 
     test('will load the config', () => {
 
-        expect(config.get('title')).to.equal('development');
-        expect(config.get('phone')).to.equal(1234);
+        expect(config.get('title')).toBe('development');
+        expect(config.get('phone')).toBe(1234);
 
         config.set('url', 'google.com');
-        expect(config.get('url')).equal('google.com');
+        expect(config.get('url')).toBe('google.com');
 
     });
 

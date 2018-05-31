@@ -5,7 +5,6 @@
   },
   "extends": "@idearium/eslint-config",
   "parserOptions": {
-    "ecmaVersion": 8,
-    "sourceType": "module"
+    "ecmaVersion": 8
   }
 }

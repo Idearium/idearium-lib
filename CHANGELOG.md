@@ -8,7 +8,7 @@
 
 #### Config
 
-- The config no longer creates a new instance. You will have to manually call instantiate it. `const config = new Config(path.join(process.cwd(), 'config'));`.
+- The config no longer creates a new instance. You will have to manually instantiate it. `const config = new Config(path.join(process.cwd(), 'config'));`.
 
 #### Query
 

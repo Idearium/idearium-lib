@@ -36,6 +36,7 @@
     "shelljs": "^0.8.2"
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "nconf": "^0.10.0"
   }
 }

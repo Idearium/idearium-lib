@@ -3,6 +3,7 @@
 const config = require('./config');
 const { Logger } = require('../lib/logs');
 const { LogentriesStream } = require('../lib/logs/streams');
+const factory = require('pino-pretty');
 
 /* eslint-disable no-process-env */
 const logentriesActive = process.env.LOGENTRIES_ACTIVE;
@@ -22,7 +23,16 @@ const log = (context, options) => {
         throw new Error('You must supply the context parameter');
     }
 
-    const streams = [process.stderr];
+    const streams = [];
+
+    let defaultStream = process.stderr;
+
+    // Enable pretty-print
+    if (config.get('isLocal')) {
+        defaultStream = factory({ colorize: true }).asMetaWrapper(process.stderr);
+    }
+
+    streams.push(defaultStream);
 
     if (logentriesActive !== 'false') {
 

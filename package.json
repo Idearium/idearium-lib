@@ -46,6 +46,7 @@
     "mongoose": "4.10.4",
     "nconf": "0.8.4",
     "pino-multi-stream": "3.1.2",
+    "pino-pretty": "1.0.1",
     "r7insight_node": "1.8.1",
     "stream-to-promise": "2.2.0",
     "stream-transform": "0.1.2",

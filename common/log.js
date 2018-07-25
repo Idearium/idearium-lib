@@ -1,40 +1,48 @@
 'use strict';
 
-const bunyan = require('bunyan');
-const config = require('../common/config');
+const config = require('./config');
 const { Logger } = require('../lib/logs');
+const { LogentriesStream } = require('../lib/logs/streams');
 
-const logEntriesToken = config.get('logEntriesToken');
-const logLevel = config.get('logLevel');
-const logLocation = config.get('logLocation');
-const logToStdout = config.get('logToStdout');
+/* eslint-disable no-process-env */
+const logentriesActive = process.env.LOGENTRIES_ACTIVE;
+const logentriesToken = process.env.LOGENTRIES_TOKEN;
+const logentriesRegion = process.env.LOGENTRIES_REGION;
+/* eslint-enable no-process-env */
 
 /**
  * Create a new Logger instance.
  * @param {String} context Context of the logs.
- * @param {String} [name='application'] Application name.
+ * @param {Object} options Pino options.
  * @return {Object} Creates a new Logger instance.
  */
-const log = (context, name = 'application') => {
+const log = (context, options) => {
 
     if (!context) {
         throw new Error('You must supply the context parameter');
     }
 
-    return new Logger({
-        context,
-        level: logLevel,
-        local: logLocation.toLowerCase() === 'local',
-        name,
-        remote: logLocation.toLowerCase() === 'remote',
-        serializers: {
-            err: bunyan.stdSerializers.err,
-            req: bunyan.stdSerializers.req,
-            res: bunyan.stdSerializers.res,
-        },
-        stdErr: logToStdout,
-        token: logEntriesToken,
-    });
+    const streams = [process.stderr];
+
+    if (logentriesActive !== 'false') {
+
+        const logEntriesStream = new LogentriesStream({
+            region: logentriesRegion,
+            token: logentriesToken,
+        });
+
+        streams.push(logEntriesStream);
+
+    }
+
+    const logger = new Logger(Object.assign({
+        prettyPrint: config.get('isLocal'),
+        streams,
+    }, options));
+
+    logger.child({ context });
+
+    return logger;
 
 };
 

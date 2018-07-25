@@ -45,10 +45,7 @@ const log = (context, options) => {
 
     }
 
-    const logger = new Logger(Object.assign({
-        prettyPrint: config.get('isLocal'),
-        streams,
-    }, options));
+    const logger = new Logger(Object.assign({ streams }, options));
 
     logger.child({ context });
 

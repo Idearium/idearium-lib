@@ -6,6 +6,7 @@ const { LogentriesStream } = require('../lib/logs/streams');
 const factory = require('pino-pretty');
 
 /* eslint-disable no-process-env */
+const elasticApmServiceName = process.env.ELASTIC_APM_SERVICE_NAME;
 const logentriesActive = process.env.LOGENTRIES_ACTIVE;
 const logentriesToken = process.env.LOGENTRIES_TOKEN;
 const logentriesRegion = process.env.LOGENTRIES_REGION;
@@ -45,7 +46,10 @@ const log = (context, options) => {
 
     }
 
-    const logger = new Logger(Object.assign({ streams }, options));
+    const logger = new Logger(Object.assign({
+        name: elasticApmServiceName,
+        streams,
+    }, options));
 
     logger.child({ context });
 
